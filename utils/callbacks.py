@@ -183,3 +183,20 @@ class LR_Find(Callback):
         if self.n_iter >= self.max_iter or self.loss > self.best_loss*10:
             raise CancelTrainException()
         if self.loss < self.best_loss: self.best_loss = self.loss        
+
+# Callback for handling metrics
+class AvgStatsCallback(Callback):
+    def __init__(self, metrics):
+        self.train_stats,self.valid_stats = AvgStats(metrics,True),AvgStats(metrics,False)
+        
+    def begin_epoch(self):
+        self.train_stats.reset()
+        self.valid_stats.reset()
+        
+    def after_loss(self):
+        stats = self.train_stats if self.in_train else self.valid_stats
+        stats.accumulate(self.run)
+    
+    def after_epoch(self):
+        print(self.train_stats)
+        print(self.valid_stats)
