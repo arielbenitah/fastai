@@ -149,6 +149,8 @@ class Recorder(Callback):
         lrs = self.lrs
         n = len(losses)-skip_last
         plt.xscale('log')
+        plt.xlabel('Learning Rate')
+        plt.ylabel('Loss')
         plt.plot(lrs[:n], losses[:n])
 
 # schedule hyperparams
