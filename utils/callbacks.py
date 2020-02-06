@@ -97,9 +97,10 @@ class Runner():
             finally: self('after_batch')
 
     def all_batches(self, dl):        
-        self.iters = len(list(dl))
+        self.iters = tf.data.experimental.cardinality(dl).numpy() #len(list(dl))
         try:
-            for xb,yb in dl: self.one_batch(xb, yb)
+            for xb,yb in dl: 
+               self.one_batch(xb, yb)
         except CancelEpochException: self('after_cancel_epoch')                    
 
     def fit(self, epochs, learn):          
