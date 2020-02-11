@@ -87,7 +87,7 @@ class Runner():
                 self('begin_batch')
                 # if training is True, this enables to calculate batchnorm and dropout
                 # else batchnorm and dropout are disabled
-                self.pred = self.model(self.xb, training=self.in_train)
+                self.pred = self.model(self.xb)
                 self('after_pred')
                 self.loss = self.loss_function(self.yb, self.pred)            
                 self('after_loss')
