@@ -38,6 +38,7 @@ class TrainEvalCallback(Callback):
         self.run.n_iter   += 1
         
     def begin_epoch(self):        
+        print('epoch = ', self.run.epoch)
         self.run.n_epochs=self.epoch
 #         self.model.train()
         self.run.in_train=True
@@ -49,15 +50,6 @@ class TrainEvalCallback(Callback):
 class CancelTrainException(Exception): pass
 class CancelEpochException(Exception): pass
 class CancelBatchException(Exception): pass
-
-'''
-def listify(o):
-    if o is None: return []
-    if isinstance(o, list): return o
-    if isinstance(o, str): return [o]
-    if isinstance(o, Iterable): return list(o)
-    return [o]
-'''
 
 class Runner():
     def __init__(self, cbs=None, cb_funcs=None):        
@@ -151,10 +143,12 @@ class Recorder(Callback):
         losses =[o.item() for o in self.losses]
         lrs = self.lrs
         n = len(losses)-skip_last
+        plt.figure(figsize=[15, 15]) 
         plt.xscale('log')
         plt.xlabel('Learning Rate')
         plt.ylabel('Loss')
         plt.plot(lrs[:n], losses[:n])
+        plt.grid(True)
 
 # schedule hyperparams
 class ParamScheduler(Callback):
