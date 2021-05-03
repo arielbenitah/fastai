@@ -4,6 +4,7 @@ import tensorflow as tf
 import matplotlib.pyplot as plt
 import numpy as np
 from .utils import listify
+import pdb
 
 _camel_re1 = re.compile('(.)([A-Z][a-z]+)')
 _camel_re2 = re.compile('([a-z0-9])([A-Z])')
@@ -55,6 +56,7 @@ class Runner():
     def __init__(self, cbs=None, cb_funcs=None):        
         cbs = listify(cbs)        
         for cbf in listify(cb_funcs):
+            # pdb.set_trace()
             cb = cbf()
             setattr(self, cb.name, cb)
             cbs.append(cb)
@@ -79,7 +81,8 @@ class Runner():
                 self('begin_batch')
                 # if training is True, this enables to calculate batchnorm and dropout
                 # else batchnorm and dropout are disabled
-                self.pred = self.model(self.xb)
+                if self.in_train: self.pred = self.model(self.xb)
+                else:             self.pred = self.model.predict(self.xb)   
                 self('after_pred')
                 self.loss = self.loss_function(self.yb, self.pred)            
                 self('after_loss')
@@ -114,7 +117,8 @@ class Runner():
                 
                 # on begin validate what to do?                
                 if not self('begin_validate'): self.all_batches(self.data.valid_dl)
-                    
+                #pdb.set_trace()   
+
                 self('after_epoch')
                     
         except CancelTrainException: self('after_cancel_train')    
